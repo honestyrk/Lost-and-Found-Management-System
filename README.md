@@ -1,0 +1,1 @@
+A Lost and Found Management System is a digital platform designed to help users report lost items and submit found items easily. The system connects people who have lost their belongings with those who have found them.
