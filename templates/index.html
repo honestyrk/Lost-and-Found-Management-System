@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Campus Find{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Lost Something?<br><span style="color: var(--secondary)">We'll Help You Find It.</span></h1>
+    <p>A centralized digital bridge connecting lost items with their rightful owners across the entire campus ecosystem.
+    </p>
+    <div style="display: flex; gap: 1.5rem; margin-top: 1rem;">
+        <a href="{{ url_for('report') }}" class="btn btn-primary">Report an Item</a>
+        <a href="{{ url_for('items') }}" class="btn btn-secondary">Browse Found Items</a>
+    </div>
+</section>
+
+<div class="container" style="padding: 0 2rem;">
+    <h2 style="margin-bottom: 2rem; font-size: 2rem;">Recent Highlights</h2>
+    <div class="grid">
+        <!-- Static placeholders for visual impact until real data flows -->
+        <div class="item-card glass">
+            <div
+                style="height: 200px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02)">
+                <span style="font-size: 3rem;">📱</span>
+            </div>
+            <div class="item-info">
+                <span class="item-badge badge-found">FOUND</span>
+                <h3>iPhone 13 Pro</h3>
+                <p style="color: var(--text-muted); margin: 0.5rem 0;">Found near Library Hall A.</p>
+                <a href="#" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 1rem;">View
+                    Details</a>
+            </div>
+        </div>
+
+        <div class="item-card glass">
+            <div
+                style="height: 200px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02)">
+                <span style="font-size: 3rem;">💳</span>
+            </div>
+            <div class="item-info">
+                <span class="item-badge badge-lost">LOST</span>
+                <h3>Student ID - John Doe</h3>
+                <p style="color: var(--text-muted); margin: 0.5rem 0;">Lost in Cafeteria at 2 PM.</p>
+                <a href="#" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 1rem;">View
+                    Details</a>
+            </div>
+        </div>
+
+        <div class="item-card glass">
+            <div
+                style="height: 200px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02)">
+                <span style="font-size: 3rem;">🎒</span>
+            </div>
+            <div class="item-info">
+                <span class="item-badge badge-found">FOUND</span>
+                <h3>Blue Backpack</h3>
+                <p style="color: var(--text-muted); margin: 0.5rem 0;">Found in Science Block Room 302.</p>
+                <a href="#" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 1rem;">View
+                    Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

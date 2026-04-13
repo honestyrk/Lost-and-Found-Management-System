@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 2.5rem;">Explore Items</h2>
+        <div style="display: flex; gap: 1rem;">
+            <!-- Simple filter logic can be added later -->
+            <input type="text" placeholder="Search items..." class="glass"
+                style="padding: 0.5rem 1.5rem; border-radius: 999px;">
+        </div>
+    </div>
+
+    {% if items %}
+    <div class="grid">
+        {% for item in items %}
+        <div class="item-card glass" onclick="window.location.href='{{ url_for('item_detail', item_id=item.item_id) }}'"
+            style="cursor: pointer;">
+            {% if item.image_path %}
+            <img src="{{ url_for('uploaded_file', filename=item.image_path) }}" class="item-image" alt="Item">
+            {% else %}
+            <div
+                style="height: 200px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.02)">
+                <span style="font-size: 3rem;">📦</span>
+            </div>
+            {% endif %}
+
+            <div class="item-info">
+                <span class="item-badge {% if item.status == 'Lost' %}badge-lost{% else %}badge-found{% endif %}">
+                    {{ item.status | upper }}
+                </span>
+                <span style="float: right; color: var(--text-muted); font-size: 0.8rem;">{{ item.category }}</span>
+                <h3 style="margin: 0.5rem 0;">{{ item.item_name }}</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                    📍 {{ item.location }}<br>
+                    {{ item.description }}
+                </p>
+
+                {% if item.status != 'Claimed' %}
+                {% if session.get('user_id') %}
+                {% if session.get('role') != 'admin' %}
+                {% if item.user_claim_status %}
+                <div class="glass"
+                    style="padding: 0.8rem; text-align: center; color: var(--primary); border: 1px solid var(--primary); border-radius: 8px;">
+                    Claim Status: {{ item.user_claim_status }}
+                </div>
+                {% else %}
+                <form action="{{ url_for('claim_item', item_id=item.item_id) }}" method="POST">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Claim Status
+                    </button>
+                </form>
+                {% endif %}
+                {% endif %}
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary" style="width: 100%; text-align: center;">Login
+                    to Claim</a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 5rem;" class="glass">
+        <h3 style="color: var(--text-muted);">No items reported yet.</h3>
+        <p>Be the first to report something!</p>
+        <a href="{{ url_for('report') }}" class="btn btn-primary" style="margin-top: 1.5rem;">Report Now</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

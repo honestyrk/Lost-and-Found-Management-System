@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+    <div style="margin-bottom: 3rem;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Admin Management</h2>
+        <p style="color: var(--text-muted);">Monitor reports, verify claims, and maintain campus safety.</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem;">
+        <div class="glass" style="padding: 1.5rem; text-align: center;">
+            <span style="display: block; font-size: 2rem; font-weight: 800; color: var(--primary);">{{ items|length
+                }}</span>
+            <small style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Total
+                Reports</small>
+        </div>
+        <div class="glass" style="padding: 1.5rem; text-align: center;">
+            <span style="display: block; font-size: 2rem; font-weight: 800; color: #f59e0b;">{{ claims|length }}</span>
+            <small style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Active
+                Claims</small>
+        </div>
+        <div class="glass" style="padding: 1.5rem; text-align: center;">
+            <span style="display: block; font-size: 2rem; font-weight: 800; color: #22c55e;">
+                {{ items|selectattr('status', 'equalto', 'Claimed')|list|length }}
+            </span>
+            <small style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Recovered
+                Items</small>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem;">
+        <!-- Claims Section -->
+        <div>
+            <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📢</span> Pending Verifications
+            </h3>
+            <div class="glass" style="overflow: hidden;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="background: rgba(255,255,255,0.03);">
+                        <tr style="text-align: left;">
+                            <th style="padding: 1.2rem;">Item Details</th>
+                            <th style="padding: 1.2rem;">Claimant</th>
+                            <th style="padding: 1.2rem;">Status</th>
+                            <th style="padding: 1.2rem;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if not claims %}
+                        <tr>
+                            <td colspan="4" style="padding: 3rem; text-align: center; color: var(--text-muted);">No
+                                claims yet</td>
+                        </tr>
+                        {% endif %}
+                        {% for claim in claims %}
+                        <tr style="border-top: 1px solid var(--glass-border);">
+                            <td style="padding: 1.2rem;">
+                                <span style="font-weight: 600;">{{ claim.item_name }}</span>
+                            </td>
+                            <td style="padding: 1.2rem;">{{ claim.user_name }}</td>
+                            <td style="padding: 1.2rem;">
+                                <span class="item-badge" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                                    {{ claim.claim_status }}
+                                </span>
+                            </td>
+                            <td style="padding: 1.2rem;">
+                                {% if claim.claim_status == 'Pending' %}
+                                <a href="{{ url_for('approve_claim', claim_id=claim.claim_id) }}"
+                                    class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Approve</a>
+                                {% else %}
+                                <span style="color: #22c55e;">Done</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Items Management -->
+        <div>
+            <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📦</span> All Reports
+            </h3>
+            <div class="glass" style="padding: 1rem; max-height: 600px; overflow-y: auto;">
+                {% if not items %}
+                <p style="padding: 2rem; text-align: center; color: var(--text-muted);">No items reported</p>
+                {% endif %}
+                {% for item in items %}
+                <div
+                    style="padding: 1.2rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-weight: 600; font-size: 1rem;">{{ item.item_name }}</span>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.3rem;">
+                            <span
+                                class="item-badge {% if item.status == 'Lost' %}badge-lost{% else %}badge-found{% endif %}"
+                                style="font-size: 0.6rem; padding: 0.1rem 0.5rem;">
+                                {{ item.status }}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="{{ url_for('item_detail', item_id=item.item_id) }}" class="btn btn-secondary"
+                            style="padding: 0.5rem; line-height: 1;">👁️</a>
+                        <a href="{{ url_for('delete_item', item_id=item.item_id) }}" class="btn"
+                            style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 0.5rem; line-height: 1;"
+                            onclick="return confirm('Are you sure you want to delete this report?')">🗑️</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
